@@ -59,3 +59,17 @@ jobs:
         path: |
           ~/.docker
         key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+    - name: Log in to AWS ECR
+      run: |
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set default.region ${{ secrets.AWS_DEFAULT_REGION }}
+        aws ecr get-login-password --region ${{ secrets.AWS_DEFAULT_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
+
+    - name: Tag Docker image
+      run: docker tag gilbertsubay/docker-react:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com/your-repo-name:latest
+    
+    - name: Deploy to Elastic Beanstalk
+      run: |
+        eb init -r ${{ secrets.AWS_DEFAULT_REGION }} -p docker your-app-name
+        eb deploy your-env-name --staged
