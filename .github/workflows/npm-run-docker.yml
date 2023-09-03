@@ -17,8 +17,8 @@ jobs:
       with:
         path: |
           ~/.docker
-          key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
-          restore-keys: |
+        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+        restore-keys: |
           ${{ runner.os }}-docker-
 
     
