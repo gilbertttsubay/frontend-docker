@@ -1,0 +1,33 @@
+name: Npm Run docker
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: setup docker
+      run: |
+        # Instal Docker
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+
+        # Jalankan Docker
+        sudo systemctl start docker
+        sudo systemctl enable docker
+
+        # Periksa versi Docker
+        docker --version
+    - name: Menjalankan perintah build docker
+      run: |
+        docker build -t gilbertsubay/docker-react -f Dockerfile.dev .
+    
+    - name: Docker run
+      run: |
+        docker run -e CI=true gilbertsubay/docker-react npm run test
