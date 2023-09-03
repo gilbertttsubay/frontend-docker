@@ -12,14 +12,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
+    - name: Save Docker image as artifact
+      uses: actions/upload-artifact@v2
       with:
-        path: |
-          ~/.docker
-        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
-        restore-keys: |
-          ${{ runner.os }}-docker-
+        name: docker-image
+        path: . 
 
     
     # - name: setup docker
@@ -52,13 +49,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
    
-    - name: Restore Docker layers from Cache
-      uses: actions/cache@v2
-
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v2
       with:
-        path: |
-          ~/.docker
-        key: ${{ runner.os }}-docker-${{ hashFiles('**/Dockerfile') }}
+        name: docker-image  # Nama artifact yang disimpan di job A
+
+    - name: Load Docker image
+      run: docker load -i docker-image.tar 
     - name: Log in to AWS ECR
       run: |
         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
