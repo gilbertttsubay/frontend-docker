@@ -12,11 +12,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: frontend-docker
-        path: /tmp/frontend-docker.tar
+    
 
     
     # - name: setup docker
@@ -38,6 +34,12 @@ jobs:
     - name: Docker run
       run: |
         docker run -e CI=true gilbertsubay/docker-react npm run test
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-docker
+        path: /tmp/frontend-docker.tar
     
   deploy:
     runs-on: ubuntu-latest
