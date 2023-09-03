@@ -46,6 +46,7 @@ jobs:
     
     - name: Docker run
       run: |
+        docker images
         docker run -e CI=true gilbertsubay/docker-react npm run test
 
     - name: Upload artifact
