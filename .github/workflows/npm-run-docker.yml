@@ -12,48 +12,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    
-
-    
-    # - name: setup docker
-    #   run: |
-    #     # Instal Docker
-    #     sudo apt-get update
-    #     sudo apt-get install -y docker.io
-
-    #     # Jalankan Docker
-    #     sudo systemctl start docker
-    #     sudo systemctl enable docker
-
-    #     # Periksa versi Docker
-    #     docker --version
 
 
-    -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-    -
-        name: Build and export
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          dockerfile: Dockerfile.dev
-          tags: gilbertsubay/docker-react:latest
-          outputs: type=docker,dest=/tmp/docker-react.tar
-    # - name: Menjalankan perintah build docker
-    #   run: |
-    #     docker build -t gilbertsubay/docker-react -f Dockerfile.dev .
+    - name: Menjalankan perintah build docker
+      run: |
+        docker build -t docker-react -f Dockerfile.dev .
     
     - name: Docker run
       run: |
         docker images
-        docker run -e CI=true gilbertsubay/docker-react npm run test
+        docker run -e CI=true docker-react npm run test
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: docker-react
-        path: /tmp/docker-react.tar
+        path: /tmp
     
   deploy:
     runs-on: ubuntu-latest
