@@ -12,11 +12,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Save Docker image as artifact
-      uses: actions/upload-artifact@v2
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
       with:
-        name: docker-image
-        path: . 
+        name: frontend-docker
+        path: /tmp/frontend-docker.tar
 
     
     # - name: setup docker
@@ -49,13 +49,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
    
-    - name: Download Docker image artifact
-      uses: actions/download-artifact@v2
+    - name: Download artifact
+      uses: actions/download-artifact@v3
       with:
-        name: docker-image  # Nama artifact yang disimpan di job A
+        name: frontend-docker
+        path: /tmp
 
     - name: Load Docker image
-      run: docker load -i docker-image.tar 
+      run: docker load -i frontend-docker.tar 
     - name: Log in to AWS ECR
       run: |
         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
